@@ -1,5 +1,10 @@
 const {shuffleArray} = require('./utils')
 
 describe('shuffleArray should', () => {
-    // CODE HERE
+    test('Returns array', () => {
+        expect(shuffleArray).toBeTruthy()
+    });
+test('returns shuffled array', () => {
+    expect(shuffleArray.length).toBe(shuffleArray.length)
+})
 })
