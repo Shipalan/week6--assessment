@@ -6,6 +6,16 @@ const {shuffleArray} = require('./utils')
 
 app.use(express.json())
 
+// include and initialize the rollbar library with your access token
+var Rollbar = require('rollbar')
+var rollbar = new Rollbar({
+  accessToken: 'd9145803d43343a490af3b6c8f7bdc06',
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+})
+
+// record a generic message and send it to Rollbar
+rollbar.log('Hello world!')
 
 
 
@@ -20,6 +30,7 @@ app.get('/css', (req,res) => {
 })
 
 app.get('/api/robots', (req, res) => {
+    rollbar.info('Robot list requested')
     try {
         res.status(200).send(bots)
     } catch (error) {
@@ -29,6 +40,7 @@ app.get('/api/robots', (req, res) => {
 })
 
 app.get('/api/robots/five', (req, res) => {
+    rollbar.info('Robots list was shuffled')
     try {
         let shuffled = shuffleArray(bots)
         let choices = shuffled.slice(0, 5)
@@ -62,6 +74,9 @@ app.post('/api/duel', (req, res) => {
             playerRecord.losses++
             res.status(200).send('You lost!')
         } else {
+            rollbar.error ('User won, but loss was recorded')
+
+            //error here. Should be wins++
             playerRecord.losses++
             res.status(200).send('You won!')
         }
@@ -72,6 +87,7 @@ app.post('/api/duel', (req, res) => {
 })
 
 app.get('/api/player', (req, res) => {
+    rollbar.info('Player requested stats')
     try {
         res.status(200).send(playerRecord)
     } catch (error) {
